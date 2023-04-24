@@ -1,9 +1,8 @@
 import streamlit as st
 from streamlit.components.v1 import html
 
-from models.models import get_models
+from models.models import get_models, get_answer
 from utils.language.ru import get_text_content
-from utils.settings import settings
 
 # получим модели
 classifier, tokenizer, model = get_models()
@@ -29,13 +28,7 @@ user_input = st.text_input("Вы: ")
 # если пользователь ввел запрос, обрабатываем его
 if user_input:
     # кодируем запрос пользователя и добавляем его в историю чата
-    input_ids = tokenizer.encode(user_input + tokenizer.eos_token, return_tensors="pt")
-    chat_history_ids = model.generate(
-        input_ids, max_length=settings['MAX_HISTORY_LEN'], pad_token_id=tokenizer.eos_token_id
-    )
-
-    # декодируем ответ бота и выводим его на страницу
-    bot_response = tokenizer.decode(chat_history_ids[:, input_ids.shape[-1]:][0], skip_special_tokens=True)
+    bot_response = get_answer(user_input)
     st.write("Bot: " + bot_response)
 
 # добавляем HTML-блок general-header

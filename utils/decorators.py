@@ -6,7 +6,7 @@ from typing import Any, Callable
 from utils.logger import Logger
 
 
-def decorator_factory(function: Callable, logger: Logger, message: str) -> Any:
+def log(function: Callable, logger: Logger, message: str) -> Any:
     """Фабрика декоратора (для подачи в него аршументов)
 
     Args:

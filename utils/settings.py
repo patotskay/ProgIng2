@@ -1,9 +1,13 @@
 import tempfile
 from os import path as osp
 
+from utils.logger import Logger
+
 # Настройки для приложения
 settings = {
     "MAX_HISTORY_LEN": 1000,
     "MAX_ANSWER_LEN": 50,
     "LOG_PATH": osp.join(tempfile.gettempdir, "streamlit_chat_logs")
 }
+
+logger = Logger(settings['LOG_PATH'])
