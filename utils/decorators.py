@@ -1,12 +1,12 @@
-from datetime import datetime as dt
-from functools import wraps
+import traceback
 
+from datetime import datetime as dt
 from typing import Any, Callable
 
 from utils.logger import Logger
 
 
-def log(function: Callable, logger: Logger, message: str) -> Any:
+def log(logger: Logger, message: str) -> Any:
     """Фабрика декоратора (для подачи в него аршументов)
 
     Args:
@@ -17,20 +17,25 @@ def log(function: Callable, logger: Logger, message: str) -> Any:
     Returns:
         Any: результат функции
     """
-
-    @wraps(function)
-    def ret_fun(*args, **kwargs) -> Any:
+    def decorator(function: Callable) -> Any:
         """Декоратор, замеряющий время и обрабатывающий ошибки
 
         Returns:
             Any: результат функции
         """
-        try:
-            start_time = dt.now()
-            returned_value = function(*args, **kwargs)
-            logger.write(message, "info", (start_time - dt.now().total_seconds()))
-        except Exception as err:
-            logger.write_error(err.__traceback__)
-        return returned_value
+        def wrapper(*args, **kwargs) -> Any:
+            """Враппер для декоратора
 
-    return ret_fun
+            Returns:
+                Any: результат функции, которую декорируем
+            """
+            returned_value = None
+            try:
+                start_time = dt.now()
+                returned_value = function(*args, **kwargs)
+                logger.write(message, "info", (dt.now() - start_time).total_seconds())
+            except Exception as err:
+                logger.write_error(f"{err}\n{traceback.format_exc()}")
+            return returned_value
+        return wrapper
+    return decorator

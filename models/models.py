@@ -3,7 +3,7 @@ from utils.decorators import log
 from utils.settings import settings, logger
 
 
-@log(logger, "Модели загружены")
+@log(logger=logger, message="Модели загружены")
 def get_models():
     # модель для анализа злобности
     classifier = pipeline("sentiment-analysis")
@@ -17,7 +17,7 @@ def get_models():
 classifier, tokenizer, model = get_models()
 
 
-@log(logger, "Ответ получен")
+@log(logger=logger, message="Ответ получен")
 def get_answer(user_input: str) -> str:
     """Получение ответа от модели
 
@@ -36,3 +36,8 @@ def get_answer(user_input: str) -> str:
         input_ids, max_length=settings['MAX_HISTORY_LEN'], pad_token_id=tokenizer.eos_token_id
     )
     return tokenizer.decode(chat_history_ids[:, input_ids.shape[-1]:][0], skip_special_tokens=True)
+
+
+@log(logger=logger, message="Анализ агресивности произведен")
+def get_toxic(user_input):
+    return classifier(user_input)[0]['label']
