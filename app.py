@@ -3,14 +3,12 @@ from streamlit.components.v1 import html
 
 from models.models import get_models
 from utils.language.ru import get_text_content
-from utils.settings import get_settings
+from utils.settings import settings
 
 # получим модели
 classifier, tokenizer, model = get_models()
 # получаем текстовый контент
 main_title, sub_title = get_text_content()
-# получаем настроки приложения
-settings = get_settings()
 
 # собираем страницу CSS из трех частей HTML:
 # 0) добавляем общий файлк с CSS стилями
@@ -32,7 +30,9 @@ user_input = st.text_input("Вы: ")
 if user_input:
     # кодируем запрос пользователя и добавляем его в историю чата
     input_ids = tokenizer.encode(user_input + tokenizer.eos_token, return_tensors="pt")
-    chat_history_ids = model.generate(input_ids, max_length=settings['MAX_HISTORY_LEN'], pad_token_id=tokenizer.eos_token_id)
+    chat_history_ids = model.generate(
+        input_ids, max_length=settings['MAX_HISTORY_LEN'], pad_token_id=tokenizer.eos_token_id
+    )
 
     # декодируем ответ бота и выводим его на страницу
     bot_response = tokenizer.decode(chat_history_ids[:, input_ids.shape[-1]:][0], skip_special_tokens=True)
