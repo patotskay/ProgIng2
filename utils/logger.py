@@ -18,7 +18,7 @@ class Logger:
         open(self.log_file, "w").close()
         open(self.error_file, "w").close()
 
-    def write(self, message: str, status: str) -> None:
+    def write(self, message: str, status: str, run_time: str) -> None:
         """Запись в лог
 
         Args:
@@ -26,7 +26,7 @@ class Logger:
             status (str): один из статусов - "I" (info), "W" (warning), "E" (error)
         """
         with open(self.log_file, "a") as f:
-            f.write(f"[{status} {dt.now().strftime('%d.%m.%y %H:%M:%S')} {message}\n")
+            f.write(f"[{status} {dt.now().strftime('%d.%m.%y %H:%M:%S')} {message} ({run_time})\n")
 
     def write_error(self, traceback: str) -> None:
         """Запись ошибок
