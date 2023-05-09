@@ -1,4 +1,4 @@
-from models.models import *
+from models.models import get_models, get_answer
 
 
 user_input = 'Hello'
