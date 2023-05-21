@@ -4,7 +4,12 @@ from streamlit.components.v1 import html
 from os import path as osp
 
 from utils.settings import settings
-from models.models import get_answer, get_toxic
+
+if settings['MODEL'] == "our":
+    from models.arifman import get_answer, get_toxic
+else:
+    from models.models import get_answer, get_toxic
+
 from utils.language.ru import get_text_content
 
 label_value = "N/A"
