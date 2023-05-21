@@ -1,0 +1,5 @@
+data
+our_gpt
+.ipynb_checkpoints
+.pytest_cache
+runs
