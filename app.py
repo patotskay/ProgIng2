@@ -17,6 +17,9 @@ label_value = "N/A"
 # получаем текстовый контент
 main_title, sub_title = get_text_content()
 
+# Сообщения для пользователя/бота
+st.session_state['chat_history'] = []
+
 # собираем страницу CSS из трех частей HTML:
 # 0) добавляем общий файлк с CSS стилями
 with open(osp.join(settings['SCRIPT_PATH'], "static", "css", "styles.css"), 'r') as f:
@@ -36,8 +39,17 @@ user_input = st.text_input("Вы: ")
 # если пользователь ввел запрос, обрабатываем его
 if user_input:
     # кодируем запрос пользователя и добавляем его в историю чата
+    st.session_state['chat_history'].append(user_input)
     bot_response = get_answer(user_input)
-    st.write("Bot: " + bot_response)
+    st.session_state['chat_history'].append(bot_response)
+    for idx, ph in enumerate(st.session_state['chat_history']):
+        if idx % 2 == 0:
+            st.write("Вы: " + ph)
+        else:
+            if settings['MODEL'] == 'our':
+                st.write("ArifMan: " + ph)
+            else:
+                st.write("Bot: " + ph)
     label_value = get_toxic(user_input)
 
 # добавляем HTML-блок general-header
