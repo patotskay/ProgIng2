@@ -35,6 +35,8 @@ html(html_template, width=800, height=200)
 # 2) MAIN
 # создаем форму для ввода запросов
 user_input = st.text_input("Вы: ")
+smile_link = "https://e7.pngegg.com/pngimages/775/304/png-clipart-emoji-\
+face-sticker-smile-meaning-emoji-face-smiley.png"
 
 # если пользователь ввел запрос, обрабатываем его
 if user_input:
@@ -52,10 +54,16 @@ if user_input:
                 st.write("Bot: " + ph)
     label_value = get_toxic(user_input)
 
+    if label_value == "NEGATIVE":
+        smile_link = "https://w7.pngwing.com/pngs/485/469/png-transparent-emoticon-music-\
+social-media-smiley-facebook-negative-miscellaneous-culture-text.png"
+    else:
+        smile_link = "https://www.svgrepo.com/show/209012/happy-emoji.svg"
+
 # добавляем HTML-блок general-header
 with open(osp.join(settings['SCRIPT_PATH'], "templates", "main", "index.html"), "r") as f:
     index = f.read()
 
 # 3) FOOTER
-html_template = f'<style>{css}</style>\n{index.format(label=label_value)}'
+html_template = f'<style>{css}</style>\n{index.format(label=label_value, smile_link=smile_link)}'
 html(html_template, width=800, height=300)
